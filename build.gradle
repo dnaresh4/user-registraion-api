@@ -36,18 +36,43 @@ dependencies {
  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+plugins {
+    id 'org.springframework.boot' version '2.5.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'jacoco'
+    id 'org.sonarqube' version '3.3'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
 test {
     useJUnitPlatform()
     reports {
-        junitXml.destination = file("${buildDir}/test-results/test")
-        html.destination = file("${buildDir}/reports/tests")
+        junitXml.required.set(true)
+        junitXml.outputLocation.set(file("${buildDir}/test-results/test"))
+        html.required.set(true)
+        html.outputLocation.set(file("${buildDir}/reports/tests"))
     }
 }
 
 jacocoTestReport {
     reports {
-        xml.destination = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-        html.destination = file("${buildDir}/reports/jacoco/test/html")
+        xml.required.set(true)
+        xml.outputLocation.set(file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml"))
+        html.required.set(true)
+        html.outputLocation.set(file("${buildDir}/reports/jacoco/test/html"))
     }
 }
 
