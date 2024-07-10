@@ -1,6 +1,6 @@
 package com.demo.userregistration.dao;
 
-import javax.transaction.Transactional;
+import jakarata.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
