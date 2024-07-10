@@ -39,18 +39,14 @@ dependencies {
 test {
     useJUnitPlatform()
     reports {
-        junitXml.enabled = true
         junitXml.destination = file("${buildDir}/test-results/test")
-        html.enabled = true
         html.destination = file("${buildDir}/reports/tests")
     }
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled = true
         xml.destination = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-        html.enabled = true
         html.destination = file("${buildDir}/reports/jacoco/test/html")
     }
 }
