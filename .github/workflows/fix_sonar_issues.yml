@@ -51,8 +51,8 @@ jobs:
       - name: Generate and parse SonarCloud report
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: AvinashNagella1999_user-registraion-api
+          SONAR_ORGANIZATION: avinashnagella1999
         run: python3 .github/scripts/generateSonarReport.py
 
       - name: Process issues and update code
