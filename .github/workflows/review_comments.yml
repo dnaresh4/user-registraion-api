@@ -37,12 +37,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonarqube -Dsonar.projectKey=AvinashNagella1999_user-registraion-api -Dsonar.organization=avinashnagella1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-      
-      - name: Generate and parse SonarQube report
-        env:
-          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          curl -u ${{ secrets.SONAR_TOKEN }}: https://sonarcloud.io/api/issues/search?componentKeys=AvinashNagella1999_user-registraion-api&pullRequest=${{ github.event.pull_request.number }}&resolved=false > sonarqube-report.json
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -51,6 +45,14 @@ jobs:
 
       - name: Install dependencies
         run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Generate SonarCloud report and extract issues
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: AvinashNagella1999_user-registraion-api  # Replace with your actual project key
+          SONAR_ORGANIZATION: avinashnagella1999  # Replace with your actual organization key
+          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: python3 .github/scripts/generateSonarReport.py
 
       - name: Get suggestions from OpenAI and add review comments
         env:
