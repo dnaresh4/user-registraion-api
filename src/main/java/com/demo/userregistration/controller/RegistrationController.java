@@ -18,7 +18,7 @@ import com.demo.userregistration.vo.SignUpResponse;
 @RequestMapping("/v1")
 public class RegistrationController {
 
-    @Autowired
+Mock suggestion: Consider refactoring the code to improve readability and maintainability.
 	private SignUpService signUpService;
 
 
