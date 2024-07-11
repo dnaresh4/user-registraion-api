@@ -82,7 +82,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          PR_EXISTS=$(gh pr list --state open --head "$(git rev-parse --abbrev-ref release)" | grep -c "$(git rev-parse --abbrev-ref release)")
+          PR_EXISTS=$(gh pr list --state open --head "$(git rev-parse --abbrev-ref HEAD)" | grep -c "$(git rev-parse --abbrev-ref HEAD)")
           if [ "$PR_EXISTS" -eq 0 ]; then
             python3 .github/scripts/createPR.py
           else

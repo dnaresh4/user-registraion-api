@@ -13,7 +13,7 @@ import com.demo.userregistration.vo.LoginRequest;
 @Component
 public class LoginDAO {
 	
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
+    @Autowired
 	private LoginRepository loginRepository;
 	
 
