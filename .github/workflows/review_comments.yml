@@ -56,7 +56,7 @@ jobs:
 
       - name: Get suggestions from OpenAI and add review comments
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPEN_AI_KEY_2 }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
