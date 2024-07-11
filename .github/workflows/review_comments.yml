@@ -36,7 +36,7 @@ jobs:
       - name: Run SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube -Dsonar.projectKey=AvinashNagella1999_user-registraion-api -Dsonar.organization=AviashNagella1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube -Dsonar.projectKey=AvinashNagella1999_user-registraion-api -Dsonar.organization=avinashnagella1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       
       - name: Generate and parse SonarQube report
         run: |

@@ -45,7 +45,7 @@ test {
 sonarqube {
     properties {
         property "sonar.projectKey", "user-registration-api"
-        property "sonar.organization", "user-registration-api"
+        property "sonar.organization", "avinashnagella1999"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.login", "\${{ secrets.SONAR_TOKEN }}"
     }
