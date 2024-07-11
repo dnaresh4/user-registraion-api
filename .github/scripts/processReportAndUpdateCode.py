@@ -59,8 +59,8 @@ def main():
 
     # Commit the changes
     commit_message = "Update code based on SonarCloud issues and OpenAI suggestions"
-    repo.index.add(updated_files)
-    repo.index.commit(commit_message)
+    repo.add(updated_files)
+    repo.commit(commit_message)
     origin = repo.remote(name='origin')
     origin.push()
 
