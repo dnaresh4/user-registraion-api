@@ -3,12 +3,13 @@ import json
 import requests
 
 def get_openai_suggestions(issue_description, api_key):
-    openai_url = "https://api.openai.com/v1/engines/davinci-codex/completions"
+    openai_url = "https://api.openai.com/v1/completions"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
     }
     data = {
+        "model": "text-davinci-003",
         "prompt": f"Provide a suggestion to fix the following issue:\n\n{issue_description}",
         "max_tokens": 100,
         "n": 1,
