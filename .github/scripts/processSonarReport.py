@@ -5,7 +5,7 @@ import requests
 
 def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
