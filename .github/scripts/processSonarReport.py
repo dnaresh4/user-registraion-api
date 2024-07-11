@@ -1,53 +1,51 @@
 import os
-import requests
-import openai
 import json
+import requests
 
-# Get environment variables
-sonar_token = os.getenv('SONAR_TOKEN')
-openai_api_key = os.getenv('OPENAI_API_KEY')
-github_token = os.getenv('GITHUB_TOKEN')
-repo = os.getenv('GITHUB_REPOSITORY')
-pull_request_number = os.getenv('GITHUB_PULL_REQUEST_NUMBER')
-
-# Set up OpenAI API key
-openai.api_key = openai_api_key
-
-# Function to get suggestions from OpenAI
-def get_openai_suggestions(issue_text):
-    response = openai.Completion.create(
-        engine="davinci-codex",
-        prompt=f"Suggest improvements for the following code issue:\n{issue_text}",
-        max_tokens=100
-    )
-    return response.choices[0].text.strip()
-
-# Load SonarCloud report
-with open('sonarqube-report.json') as f:
-    report = json.load(f)
-
-# Process issues and create review comments
-comments = []
-for issue in report['issues']:
-    issue_text = issue['message']
-    suggestion = get_openai_suggestions(issue_text)
-    comments.append({
-        'path': issue['component'],
-        'side': 'RIGHT',
-        'body': f"Issue: {issue_text}\nSuggestion: {suggestion}",
-        'start_line': issue['line'],
-        'line': issue['line']
-    })
-
-# Post comments to GitHub pull request
-if comments:
+def get_openai_suggestions(issue_description, api_key):
+    openai_url = "https://api.openai.com/v1/engines/davinci-codex/completions"
     headers = {
-        'Authorization': f'token {github_token}',
-        'Accept': 'application/vnd.github.v3+json'
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
     }
-    for comment in comments:
-        url = f'https://api.github.com/repos/{repo}/pulls/{pull_request_number}/comments'
-        response = requests.post(url, headers=headers, json=comment)
-        response.raise_for_status()
+    data = {
+        "prompt": f"Provide a suggestion to fix the following issue:\n\n{issue_description}",
+        "max_tokens": 100,
+        "n": 1,
+        "stop": "\n"
+    }
+    response = requests.post(openai_url, headers=headers, json=data)
+    response.raise_for_status()
+    return response.json()["choices"][0]["text"].strip()
 
-print('Review comments added successfully.')
+def post_github_comment(issue, suggestion, repo, pr_number, github_token):
+    url = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments"
+    headers = {
+        "Authorization": f"Bearer {github_token}",
+        "Content-Type": "application/json"
+    }
+    comment_body = {
+        "body": f"Issue: {issue['message']}\n\nSuggestion: {suggestion}\n\nFile: {issue['component']}\nLine: {issue['line']}"
+    }
+    response = requests.post(url, headers=headers, json=comment_body)
+    response.raise_for_status()
+
+def main():
+    openai_api_key = os.getenv('OPENAI_API_KEY')
+    github_token = os.getenv('GITHUB_TOKEN')
+    repo = os.getenv('GITHUB_REPOSITORY')
+    pr_number = os.getenv('GITHUB_PULL_REQUEST_NUMBER')
+
+    if not all([openai_api_key, github_token, repo, pr_number]):
+        raise ValueError("Missing required environment variables")
+
+    with open('sonarcloud_issues.json', 'r') as f:
+        issues = json.load(f)
+
+    for issue in issues:
+        suggestion = get_openai_suggestions(issue['message'], openai_api_key)
+        post_github_comment(issue, suggestion, repo, pr_number, github_token)
+        print(f"Posted suggestion for issue: {issue['message']}")
+
+if __name__ == "__main__":
+    main()
