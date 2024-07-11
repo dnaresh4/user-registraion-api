@@ -7,6 +7,7 @@ def fetch_sonar_issues(sonar_token, sonar_project_key, sonar_organization):
     params = {
         "componentKeys": sonar_project_key,
         "organization": sonar_organization,
+        "branch": "master",
         "resolved": "false"
     }
     headers = {
