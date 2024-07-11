@@ -89,7 +89,7 @@ def main():
         return
 
     # Push the new branch to the remote repository
-    run_git_command(["git", "push", "--set-upstream", "origin", head_branch])
+    run_git_command(["git", "push", "--set-upstream", "origin", "master"])
 
     print(f"Code updated and committed to branch {head_branch}.")
 
