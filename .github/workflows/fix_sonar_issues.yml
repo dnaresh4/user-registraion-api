@@ -64,7 +64,7 @@ jobs:
         run: python3 .github/scripts/processReportAndUpdateCode.py
 
       - name: Create Pull Request to release branch
-        if: steps.generate_and_parse_sonarcloud_report.outputs.has_issues == 'true'
+        if: steps.sonarcloud_issues.outputs.has_issues == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
