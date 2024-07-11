@@ -39,8 +39,10 @@ jobs:
         run: ./gradlew sonarqube -Dsonar.projectKey=AvinashNagella1999_user-registraion-api -Dsonar.organization=avinashnagella1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       
       - name: Generate and parse SonarQube report
+        env:
+          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          curl -u ${{ secrets.SONAR_TOKEN }}: https://sonarcloud.io/api/issues/search?componentKeys=AvinashNagella1999_user-registraion-api&pullRequest=1&resolved=false > sonarqube-report.json
+          curl -u ${{ secrets.SONAR_TOKEN }}: https://sonarcloud.io/api/issues/search?componentKeys=AvinashNagella1999_user-registraion-api&pullRequest=${{ github.event.pull_request.number }}&resolved=false > sonarqube-report.json
 
       - name: Set up Python
         uses: actions/setup-python@v2
