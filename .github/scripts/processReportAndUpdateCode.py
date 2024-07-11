@@ -34,16 +34,11 @@ def update_code_with_suggestion(file_path, line, suggestion):
     with open(file_path, 'w') as file:
         file.writelines(lines)
 
-def run_command(command):
-    result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
-    return result.stdout.strip()
-
-
-def commit_changes(branch_name, commit_message):
-    run_command(f"git checkout -b {branch_name}")
-    run_command("git add .")
-    run_command("git commit -m {commit_message}")
-    run_command(f"git push origin {branch_name}")
+def run_git_command(command):
+    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+    print(result.stdout)
+    if result.stderr:
+        print(result.stderr)
 
 def main():
     openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -68,11 +63,27 @@ def main():
         update_code_with_suggestion(file_path, line, suggestion)
         updated_files.append(file_path)
         print(f"Updated {file_path} at line {line} with suggestion: {suggestion}")
+    
+    if not updated_files:
+        print("No files updated.")
+        return
+
+    # Add and commit the changes
+    run_git_command(["git", "add"] + updated_files)
+    run_git_command(["git", "commit", "-m", commit_message])
+
+    # Push the new branch to the remote repository
+    run_git_command(["git", "push", "--set-upstream", "origin", head_branch])
+
+    print(f"Code updated and committed to branch {head_branch}.")
 
     # Commit the changes
     commit_message = "Update code based on SonarCloud issues and OpenAI suggestions"
     
-    commit_changes("master", commit_message)
+    repo.index.add(updated_files)
+    repo.index.commit(commit_message)
+    origin = repo.remote(name='origin')
+    origin.push()
 
 if __name__ == "__main__":
     main()
