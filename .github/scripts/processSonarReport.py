@@ -1,26 +1,21 @@
 import os
 import json
+import openai
 import requests
 
 def get_openai_suggestions(issue_description, api_key):
-    openai_url = "https://api.openai.com/v1/completions"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
-    data = {
-        "model": "text-davinci-003",
-        "prompt": f"Provide a suggestion to fix the following issue:\n\n{issue_description}",
-        "max_tokens": 100,
-        "n": 1,
-        "stop": "\n"
-    }
-    response = requests.post(openai_url, headers=headers, json=data)
-    response.raise_for_status()
-    return response.json()["choices"][0]["text"].strip()
+    openai.api_key = api_key
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=f"Provide a suggestion to fix the following issue:\n\n{issue_description}",
+        max_tokens=100,
+        n=1,
+        stop="\n"
+    )
+    return response.choices[0].text.strip()
 
 def post_github_comment(issue, suggestion, repo, pr_number, github_token):
-    url = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments"
+    url = f"https://github.com/repos/{repo}/issues/{pr_number}/comments"
     headers = {
         "Authorization": f"Bearer {github_token}",
         "Content-Type": "application/json"
