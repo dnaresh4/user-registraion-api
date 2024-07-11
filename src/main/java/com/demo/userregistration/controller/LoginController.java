@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.ArrayList;
-import org.hibernate.annotations.processing.Pattern;
+Mock suggestion: Consider refactoring the code to improve readability and maintainability.
+Mock suggestion: Consider refactoring the code to improve readability and maintainability.
 
 import com.demo.userregistration.exception.LoginException;
 import com.demo.userregistration.service.LoginService;
@@ -22,7 +22,7 @@ import com.demo.userregistration.vo.LoginResponse;
 @RequestMapping("/v1")
 public class LoginController {
 
-	@Autowired
+Mock suggestion: Consider refactoring the code to improve readability and maintainability.
 	private LoginService loginService;
 
 	@PostMapping("/login")
