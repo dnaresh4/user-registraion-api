@@ -35,8 +35,14 @@ def update_code_with_suggestion(file_path, line, suggestion):
         file.writelines(lines)
 
 def run_git_command(command):
-    result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
-    print(result.stdout)
+    try:
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+        print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running command {' '.join(command)}: {e.stderr}")
+        raise
 
 def main():
     openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -70,9 +76,17 @@ def main():
     commit_message = "Update code based on SonarCloud issues and OpenAI suggestions"
     head_branch = os.getenv('GITHUB_HEAD_REF')
 
+    run_git_command(["git", "config", "--global", "user.name", "github-actions[bot]"])
+    run_git_command(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"])
+
+
     # Add and commit the changes
-    run_git_command(["git", "add ."])
-    run_git_command(["git", "commit", "-m", commit_message])
+    try:
+        run_git_command(["git", "add"] + updated_files)
+        run_git_command(["git", "commit", "-m", commit_message])
+    except subprocess.CalledProcessError as e:
+        print("No changes to commit.")
+        return
 
     # Push the new branch to the remote repository
     run_git_command(["git", "push", "--set-upstream", "origin", head_branch])
