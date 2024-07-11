@@ -3,11 +3,16 @@ import requests
 import json
 
 def fetch_sonar_issues(sonar_token, sonar_project_key, sonar_organization):
-    url = f"https://sonarcloud.io/api/issues/search?organization={sonar_organization}&componentKeys={sonar_project_key}"
-    headers = {
-        "Authorization": f"Basic {sonar_token}"
+    url = "https://sonarcloud.io/api/issues/search"
+    params = {
+        "componentKeys": sonar_project_key,
+        "organization": sonar_organization,
+        "resolved": "false"
     }
-    response = requests.get(url, headers=headers)
+    headers = {
+        "Authorization": f"Bearer {sonar_token}"
+    }
+    response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     return response.json()
 
