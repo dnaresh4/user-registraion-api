@@ -1,6 +1,8 @@
 package com.demo.userregistration.controller;
 
 import java.util.List;
+import java.util.ArrayList;
+import org.hibernate.annotations.processing.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
