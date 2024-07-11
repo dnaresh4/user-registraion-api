@@ -2,6 +2,7 @@ import os
 import json
 import openai
 from github import Github
+import subprocess
 
 def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
@@ -33,6 +34,17 @@ def update_code_with_suggestion(file_path, line, suggestion):
     with open(file_path, 'w') as file:
         file.writelines(lines)
 
+def run_command(command):
+    result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
+    return result.stdout.strip()
+
+
+def commit_changes(branch_name, commit_message):
+    run_command(f"git checkout -b {branch_name}")
+    run_command("git add .")
+    run_command("git commit -m {commit_message}")
+    run_command(f"git push origin {branch_name}")
+
 def main():
     openai_api_key = os.getenv('OPENAI_API_KEY')
     github_token = os.getenv('GITHUB_TOKEN')
@@ -60,10 +72,7 @@ def main():
     # Commit the changes
     commit_message = "Update code based on SonarCloud issues and OpenAI suggestions"
     
-    repo.github.add(updated_files)
-    repo.github.commit(commit_message)
-    origin = repo.remote(name='origin')
-    origin.push()
+    commit_changes("master", commit_message)
 
 if __name__ == "__main__":
     main()
