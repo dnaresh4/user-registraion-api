@@ -5,12 +5,15 @@ import requests
 
 def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=f"Provide a suggestion to fix the following issue:\n\n{issue_description}",
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": f"Provide a suggestion to fix the following issue:\n\n{issue_description}"}
+        ],
         max_tokens=100,
         n=1,
-        stop="\n"
+        stop=None
     )
     return response.choices[0].text.strip()
 
