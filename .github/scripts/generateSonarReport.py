@@ -2,11 +2,11 @@ import os
 import requests
 import json
 
-def get_sonarcloud_issues(sonar_token, project_key, pullRequest, organization):
-    url = f"https://sonarcloud.io/api/issues/search"
+def get_sonarcloud_issues(sonar_token, project_key, pull_request, organization):
+    url = "https://sonarcloud.io/api/issues/search"
     params = {
         "componentKeys": project_key,
-        "pullRequest": pullRequest,
+        "pullRequest": pull_request,
         "organization": organization,
         "resolved": "false"
     }
@@ -29,13 +29,13 @@ def save_issues_to_json(issues, output_file):
 def main():
     sonar_token = os.getenv('SONAR_TOKEN')
     project_key = os.getenv('SONAR_PROJECT_KEY')
-    pullRequest = os.getenv('GITHUB_PULL_REQUEST_NUMBER')
+    pull_request = os.getenv('GITHUB_PULL_REQUEST_NUMBER')
     organization = os.getenv('SONAR_ORGANIZATION')
 
-    if not all([sonar_token, project_key, pullRequest, organization]):
+    if not all([sonar_token, project_key, pull_request, organization]):
         raise ValueError("Missing required environment variables")
 
-    report = get_sonarcloud_issues(sonar_token, project_key, pullRequest, organization)
+    report = get_sonarcloud_issues(sonar_token, project_key, pull_request, organization)
     issues = extract_issues(report)
     save_issues_to_json(issues, 'sonarqube-report.json')
 

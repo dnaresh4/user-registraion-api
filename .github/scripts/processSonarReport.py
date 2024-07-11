@@ -4,6 +4,16 @@ import openai
 from github import Github
 
 def get_openai_suggestions(issue_description, api_key):
+    """
+    Generates a suggestion using OpenAI's GPT-3.5-turbo model based on the given issue description.
+
+    Args:
+        issue_description (str): The description of the issue to be fixed.
+        api_key (str): The API key for accessing the OpenAI service.
+
+    Returns:
+        str: The generated suggestion to fix the issue.
+    """
     openai.api_key = api_key
     try: 
         response = openai.chat.completions.create(
@@ -22,40 +32,15 @@ def get_openai_suggestions(issue_description, api_key):
         # Mock response for testing purposes
         return "Mock suggestion: Consider refactoring the code to improve readability and maintainability."
 
-def post_github_review_comment(issue, suggestion, repo, pr_number, github_token):
+def post_github_comment(issue, suggestion, repo, pr_number, github_token):
+    """
+    Posts a comment on a GitHub pull request with information about an issue and a suggestion.
+    """
     g = Github(github_token)
-    repository = g.get_repo(repo)
-    pull_request = repository.get_pull(pr_number)
-    
-    file_path = issue['component'].replace('src/main/java/', '')
-    line = issue.get('line', 1)
-    
-        # Convert line number to diff position
-    diff_position = None
-    for file in pull_request.get_files():
-        if file.filename == file_path:
-            for hunk in file.patch.split('\n'):
-                if hunk.startswith('@@'):
-                    diff_lines = hunk.split(' ')
-                    added_lines = diff_lines[2].split(',')
-                    start_line = int(added_lines[0][1:])
-                    if start_line <= line < start_line + int(added_lines[1]):
-                        diff_position = line - start_line + 1
-                        break
-
-    if diff_position is None:
-        print(f"Could not determine diff position for {file_path} at line {line}")
-        return
-
-    body = f"Issue: {issue['message']}\n\nSuggestion: {suggestion}"
-
-    review_comment = {
-        "path": file_path,
-        "position": diff_position,
-        "body": body
-    }
-    
-    pull_request.create_review(body=body, event="COMMENT", comments=[review_comment])
+    repo = g.get_repo(repo)
+    pull_request = repo.get_pull(pr_number)
+    body = f"Issue: {issue['message']}\n\nSuggestion: {suggestion}\n\nFile: {issue['component']}\nLine: {issue.get('line', 'N/A')}"
+    pull_request.create_issue_comment(body)
 
 def main():
     openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -73,7 +58,7 @@ def main():
 
     for issue in issues:
         suggestion = get_openai_suggestions(issue['message'], openai_api_key)
-        post_github_review_comment(issue, suggestion, repo, pr_number, github_token)
+        post_github_comment(issue, suggestion, repo, pr_number, github_token)
         print(f"Posted suggestion for issue: {issue['message']}")
 
 if __name__ == "__main__":
