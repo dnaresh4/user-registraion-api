@@ -71,7 +71,7 @@ def main():
     head_branch = os.getenv('GITHUB_HEAD_REF')
 
     # Add and commit the changes
-    run_git_command(["git", "add"] + updated_files)
+    run_git_command(["git", "add ."])
     run_git_command(["git", "commit", "-m", commit_message])
 
     # Push the new branch to the remote repository
