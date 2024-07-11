@@ -40,7 +40,7 @@ jobs:
       
       - name: Generate and parse SonarQube report
         run: |
-          curl -u ${{ secrets.SONAR_TOKEN }}: https://sonarcloud.io/api/issues/search?componentKeys=user-registration-api&resolved=false > sonarqube-report.json
+          curl -u ${{ secrets.SONAR_TOKEN }}: https://sonarcloud.io/api/issues/search?componentKeys=AvinashNagella1999_user-registraion-api&pullRequest=1&resolved=false > sonarqube-report.json
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -54,4 +54,4 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python3 .github/scripts/processSonarqubeReport.py
+        run: python3 .github/scripts/processSonarReport.py
