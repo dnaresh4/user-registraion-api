@@ -67,6 +67,10 @@ def main():
     if not updated_files:
         print("No files updated.")
         return
+    
+    # Commit the changes
+    commit_message = "Update code based on SonarCloud issues and OpenAI suggestions"
+    head_branch = os.getenv('GITHUB_HEAD_REF')
 
     # Add and commit the changes
     run_git_command(["git", "add"] + updated_files)
@@ -76,14 +80,6 @@ def main():
     run_git_command(["git", "push", "--set-upstream", "origin", head_branch])
 
     print(f"Code updated and committed to branch {head_branch}.")
-
-    # Commit the changes
-    commit_message = "Update code based on SonarCloud issues and OpenAI suggestions"
-    
-    repo.index.add(updated_files)
-    repo.index.commit(commit_message)
-    origin = repo.remote(name='origin')
-    origin.push()
 
 if __name__ == "__main__":
     main()
