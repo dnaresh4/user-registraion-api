@@ -19,6 +19,15 @@ repo = g.get_repo(repo_name)
 pull_request = repo.get_pull(int(pr_number))
 
 def get_openai_suggestion(issue_description):
+    """
+    Generates a suggestion to fix a given issue in a Java Spring Boot project using OpenAI's text-davinci-codex model.
+
+    Parameters:
+        issue_description (str): The description of the issue to be fixed.
+
+    Returns:
+        str: The generated suggestion to fix the issue.
+    """
     response = openai.Completion.create(
         model="text-davinci-codex",
         prompt=f"Provide a suggestion to fix the following issue in a Java Spring Boot project: {issue_description}",

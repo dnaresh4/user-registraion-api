@@ -1,3 +1,5 @@
+# This workflow performs SonarQube analysis and code review on pull requests targeting the 'release' branch.
+
 name: SonarQube Analysis and Code Review
 
 on:
@@ -34,7 +36,7 @@ jobs:
       - name: Run SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube -Dsonar.projectKey=user-registration-api -Dsonar.host.url=http://192.168.1.3:9000 -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube -Dsonar.projectKey=avinashnagella1999 -Dsonar.organization=AviashNagella1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       
       - name: Generate and parse SonarQube report
         run: |

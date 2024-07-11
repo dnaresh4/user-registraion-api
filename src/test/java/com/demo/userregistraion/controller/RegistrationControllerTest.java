@@ -43,7 +43,7 @@ MockitoAnnotations.openMocks(this);
  ResponseEntity<SignUpResponse> responseEntity = registrationController.registerUser(signUpRequest);
  SignUpResponse actualResponse = responseEntity.getBody();
 
- assertEquals(200, responseEntity.getStatusCodeValue());
+assertEquals(200, responseEntity.getStatusCode().value());
  assertEquals(expectedResponse, actualResponse);
  }
 
@@ -59,8 +59,6 @@ MockitoAnnotations.openMocks(this);
  when(signUpService.existsByEmail(signUpRequest.getEmailAddress())).thenReturn(true);
 
  ResponseEntity<SignUpResponse> responseEntity = registrationController.registerUser(signUpRequest);
- SignUpResponse actualResponse = responseEntity.getBody();
-
  assertEquals(400, responseEntity.getStatusCode().value());
  }
 
