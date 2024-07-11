@@ -33,10 +33,5 @@ def main():
     issues = fetch_sonar_issues(sonar_token, sonar_project_key, sonar_organization)
     save_issues_to_json(issues['issues'])
 
-    if issues['issues']:
-        print("::set-output name=has_issues::true")
-    else:
-        print("::set-output name=has_issues::false")
-
 if __name__ == "__main__":
     main()
