@@ -39,7 +39,7 @@ def main():
     if not all([openai_api_key, github_token, repo, pr_number]):
         raise ValueError("Missing required environment variables")
 
-    with open('sonarcloud_issues.json', 'r') as f:
+    with open('sonarqube-report.json', 'r') as f:
         issues = json.load(f)
 
     for issue in issues:
