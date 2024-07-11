@@ -1,7 +1,7 @@
 import os
 import json
 import openai
-import requests
+from github import Github
 
 def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
@@ -23,16 +23,11 @@ def get_openai_suggestions(issue_description, api_key):
         return "Mock suggestion: Consider refactoring the code to improve readability and maintainability."
 
 def post_github_comment(issue, suggestion, repo, pr_number, github_token):
-    url = f"https://github.com/repos/{repo}/issues/{pr_number}/comments"
-    headers = {
-        "Authorization": f"Bearer {github_token}",
-        "Content-Type": "application/json"
-    }
-    comment_body = {
-        "body": f"Issue: {issue['message']}\n\nSuggestion: {suggestion}\n\nFile: {issue['component']}\nLine: {issue['line']}"
-    }
-    response = requests.post(url, headers=headers, json=comment_body)
-    response.raise_for_status()
+    g = Github(github_token)
+    repo = g.get_repo(repo)
+    pull_request = repo.get_pull(pr_number)
+    body = f"Issue: {issue['message']}\n\nSuggestion: {suggestion}\n\nFile: {issue['component']}\nLine: {issue.get('line', 'N/A')}"
+    pull_request.create_issue_comment(body)
 
 def main():
     openai_api_key = os.getenv('OPENAI_API_KEY')
