@@ -5,17 +5,22 @@ import requests
 
 def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"Provide a suggestion to fix the following issue:\n\n{issue_description}"}
-        ],
-        max_tokens=100,
-        n=1,
-        stop=None
-    )
-    return response.choices[0].text.strip()
+    try: 
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": f"Provide a suggestion to fix the following issue:\n\n{issue_description}"}
+            ],
+            max_tokens=100,
+            n=1,
+            stop=None
+        )
+        return response.choices[0].text.strip()
+    except openai.error.RateLimitError as e:
+        print(f"Rate limit exceeded: {e}")
+        # Mock response for testing purposes
+        return "Mock suggestion: Consider refactoring the code to improve readability and maintainability."
 
 def post_github_comment(issue, suggestion, repo, pr_number, github_token):
     url = f"https://github.com/repos/{repo}/issues/{pr_number}/comments"
