@@ -12,7 +12,7 @@ import com.demo.userregistration.vo.SignUpResponse;
 @Service
 public class SignUpService {
 	
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
+    @Autowired
 	private SignUpDAO signUpDao;
 
 	public boolean existsByEmail(String emailAddress) {

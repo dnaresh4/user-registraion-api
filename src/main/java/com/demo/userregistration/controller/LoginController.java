@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
-
 import com.demo.userregistration.exception.LoginException;
 import com.demo.userregistration.service.LoginService;
 import com.demo.userregistration.vo.DeleteRequest;
@@ -21,7 +18,7 @@ import com.demo.userregistration.vo.LoginResponse;
 @RequestMapping("/v1")
 public class LoginController {
 
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
+    @Autowired
 	private LoginService loginService;
 
 	@PostMapping("/login")
