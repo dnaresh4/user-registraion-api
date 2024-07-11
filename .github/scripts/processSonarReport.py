@@ -22,12 +22,25 @@ def get_openai_suggestions(issue_description, api_key):
         # Mock response for testing purposes
         return "Mock suggestion: Consider refactoring the code to improve readability and maintainability."
 
-def post_github_comment(issue, suggestion, repo, pr_number, github_token):
+def post_github_review_comment(issue, suggestion, repo, pr_number, github_token):
     g = Github(github_token)
-    repo = g.get_repo(repo)
-    pull_request = repo.get_pull(pr_number)
-    body = f"Issue: {issue['message']}\n\nSuggestion: {suggestion}\n\nFile: {issue['component']}\nLine: {issue.get('line', 'N/A')}"
-    pull_request.create_issue_comment(body)
+    repository = g.get_repo(repo)
+    pull_request = repository.get_pull(pr_number)
+    
+    file_path = issue['component'].replace('src/main/java/', '')
+    line = issue.get('line', 1)
+    
+    body = f"Issue: {issue['message']}\n\nSuggestion: {suggestion}"
+    
+    review_comment = {
+        "path": file_path,
+        "position": line,
+        "body": body,
+        "side": "RIGHT",
+        "start_side": "RIGHT"
+    }
+    
+    pull_request.create_review(body=body, event="COMMENT", comments=[review_comment])
 
 def main():
     openai_api_key = os.getenv('OPENAI_API_KEY')
