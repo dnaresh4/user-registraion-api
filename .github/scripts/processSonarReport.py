@@ -58,7 +58,7 @@ def main():
 
     for issue in issues:
         suggestion = get_openai_suggestions(issue['message'], openai_api_key)
-        post_github_comment(issue, suggestion, repo, pr_number, github_token)
+        post_github_review_comment(issue, suggestion, repo, pr_number, github_token)
         print(f"Posted suggestion for issue: {issue['message']}")
 
 if __name__ == "__main__":
