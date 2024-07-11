@@ -1,49 +1,53 @@
 import os
-import json
+import requests
 import openai
-from github import Github
+import json
 
-# Load environment variables
-openai.api_key = os.getenv('OPENAI_API_KEY')
+# Get environment variables
+sonar_token = os.getenv('SONAR_TOKEN')
+openai_api_key = os.getenv('OPENAI_API_KEY')
 github_token = os.getenv('GITHUB_TOKEN')
-repo_name = os.getenv('GITHUB_REPOSITORY')
-pr_number = os.getenv('GITHUB_REF').split('/')[-1]
+repo = os.getenv('GITHUB_REPOSITORY')
+pull_request_number = os.getenv('GITHUB_PULL_REQUEST_NUMBER')
 
-# Read SonarQube report
-with open('sonarqube-report.json', 'r') as f:
-    report = json.load(f)
+# Set up OpenAI API key
+openai.api_key = openai_api_key
 
-# Initialize GitHub client
-g = Github(github_token)
-repo = g.get_repo(repo_name)
-pull_request = repo.get_pull(int(pr_number))
-
-def get_openai_suggestion(issue_description):
-    """
-    Generates a suggestion to fix a given issue in a Java Spring Boot project using OpenAI's text-davinci-codex model.
-
-    Parameters:
-        issue_description (str): The description of the issue to be fixed.
-
-    Returns:
-        str: The generated suggestion to fix the issue.
-    """
+# Function to get suggestions from OpenAI
+def get_openai_suggestions(issue_text):
     response = openai.Completion.create(
-        model="text-davinci-codex",
-        prompt=f"Provide a suggestion to fix the following issue in a Java Spring Boot project: {issue_description}",
-        max_tokens=150
+        engine="davinci-codex",
+        prompt=f"Suggest improvements for the following code issue:\n{issue_text}",
+        max_tokens=100
     )
     return response.choices[0].text.strip()
 
-# Iterate through issues and add review comments
-for issue in report.get('issues', []):
-    file_path = issue['component'].replace('java:', '')
-    line = issue['line']
-    message = issue['message']
-    
-    suggestion = get_openai_suggestion(message)
-    comment_body = f"Issue: {message}\n\nSuggestion: {suggestion}"
-    
-    pull_request.create_review_comment(body=comment_body, commit_id=pull_request.head.sha, path=file_path, position=line)
+# Load SonarCloud report
+with open('sonarqube-report.json') as f:
+    report = json.load(f)
 
-print("Review comments added based on SonarQube report and OpenAI suggestions.")
+# Process issues and create review comments
+comments = []
+for issue in report['issues']:
+    issue_text = issue['message']
+    suggestion = get_openai_suggestions(issue_text)
+    comments.append({
+        'path': issue['component'],
+        'side': 'RIGHT',
+        'body': f"Issue: {issue_text}\nSuggestion: {suggestion}",
+        'start_line': issue['line'],
+        'line': issue['line']
+    })
+
+# Post comments to GitHub pull request
+if comments:
+    headers = {
+        'Authorization': f'token {github_token}',
+        'Accept': 'application/vnd.github.v3+json'
+    }
+    for comment in comments:
+        url = f'https://api.github.com/repos/{repo}/pulls/{pull_request_number}/comments'
+        response = requests.post(url, headers=headers, json=comment)
+        response.raise_for_status()
+
+print('Review comments added successfully.')
