@@ -10,7 +10,7 @@ import com.demo.userregistration.repository.SignUpRepository;
 @Component
 public class SignUpDAO {
 	
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
+    @Autowired
 	private SignUpRepository signUpRepository;
 	
 
