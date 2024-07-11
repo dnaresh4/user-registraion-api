@@ -37,6 +37,8 @@ def main():
 
     if not all([openai_api_key, github_token, repo, pr_number]):
         raise ValueError("Missing required environment variables")
+    
+    pr_number = int(pr_number) # Convert to integer
 
     with open('sonarqube-report.json', 'r') as f:
         issues = json.load(f)
