@@ -53,7 +53,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_PROJECT_KEY: AvinashNagella1999_user-registraion-api
           SONAR_ORGANIZATION: avinashnagella1999
-        run: python3 .github/scripts/generateSonarReport.py
+        run: python3 .github/scripts/fetchSonarIssues.py
 
       - name: Process issues and update code
         if: steps.generateSonarReport.outputs.has_issues == 'true'
