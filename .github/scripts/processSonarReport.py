@@ -35,9 +35,7 @@ def post_github_review_comment(issue, suggestion, repo, pr_number, github_token)
     review_comment = {
         "path": file_path,
         "position": line,
-        "body": body,
-        "side": "RIGHT",
-        "start_side": "RIGHT"
+        "body": body
     }
     
     pull_request.create_review(body=body, event="COMMENT", comments=[review_comment])
