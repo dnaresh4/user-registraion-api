@@ -18,7 +18,7 @@ def main():
     github_token = os.getenv('GITHUB_TOKEN')
     repo = os.getenv('GITHUB_REPOSITORY')
     base_branch = "release"
-    head_branch = os.getenv('GITHUB_HEAD_REF')
+    head_branch = "master"
 
     if not all([github_token, repo, head_branch]):
         raise ValueError("Missing required environment variables")
