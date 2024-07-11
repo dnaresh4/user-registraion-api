@@ -30,11 +30,28 @@ def post_github_review_comment(issue, suggestion, repo, pr_number, github_token)
     file_path = issue['component'].replace('src/main/java/', '')
     line = issue.get('line', 1)
     
+        # Convert line number to diff position
+    diff_position = None
+    for file in pull_request.get_files():
+        if file.filename == file_path:
+            for hunk in file.patch.split('\n'):
+                if hunk.startswith('@@'):
+                    diff_lines = hunk.split(' ')
+                    added_lines = diff_lines[2].split(',')
+                    start_line = int(added_lines[0][1:])
+                    if start_line <= line < start_line + int(added_lines[1]):
+                        diff_position = line - start_line + 1
+                        break
+
+    if diff_position is None:
+        print(f"Could not determine diff position for {file_path} at line {line}")
+        return
+
     body = f"Issue: {issue['message']}\n\nSuggestion: {suggestion}"
-    
+
     review_comment = {
         "path": file_path,
-        "position": line,
+        "position": diff_position,
         "body": body
     }
     
