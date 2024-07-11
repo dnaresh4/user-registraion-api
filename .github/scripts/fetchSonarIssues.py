@@ -15,6 +15,7 @@ def fetch_sonar_issues(sonar_token, sonar_project_key, sonar_organization):
     }
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
+    print(response.json())
     return response.json()
 
 def save_issues_to_json(issues):
