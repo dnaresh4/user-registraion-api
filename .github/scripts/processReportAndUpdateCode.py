@@ -35,10 +35,8 @@ def update_code_with_suggestion(file_path, line, suggestion):
         file.writelines(lines)
 
 def run_git_command(command):
-    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+    result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
     print(result.stdout)
-    if result.stderr:
-        print(result.stderr)
 
 def main():
     openai_api_key = os.getenv('OPENAI_API_KEY')
