@@ -18,8 +18,9 @@ def get_sonarcloud_issues(sonar_token, project_key, pullRequest, organization):
     return response.json()
 
 def extract_issues(report):
-    issues = report.get('issues', [])
-    return [issue for issue in issues]
+    if 'issues' not in report:
+        raise ValueError("Expected 'issues' key in the report")
+    return report['issues']
 
 def save_issues_to_json(issues, output_file):
     with open(output_file, 'w') as f:
