@@ -8,14 +8,14 @@ def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
     try:
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo-16k-0613",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Provide a suggestion to fix the following issue:\n\n{issue_description}"}
             ],
-            max_tokens=100,
-            n=1,
-            stop=None
+            temperature=0.7,
+            max_tokens=64,
+            top_p=1
         )
         return response['choices'][0]['message']['content'].strip()
     except openai.RateLimitError as e:
