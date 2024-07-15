@@ -14,7 +14,7 @@ import com.demo.userregistration.vo.LoginResponse;
 @Service
 public class LoginService {
 	
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
+    @Autowired
 	private LoginDAO loginDao;
 
 	public LoginResponse loginUser(LoginRequest loginRequest) {
