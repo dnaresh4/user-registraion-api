@@ -18,7 +18,7 @@ import com.demo.userregistration.vo.LoginResponse;
 @RequestMapping("/v1")
 public class LoginController {
 
-    @Autowired
+Mock suggestion: Consider refactoring the code to improve readability and maintainability.
 	private LoginService loginService;
 
 	@PostMapping("/login")
