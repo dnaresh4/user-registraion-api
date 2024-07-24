@@ -7,7 +7,7 @@ import com.demo.userregistration.model.UserEntity;
 
 @Repository
 public interface LoginRepository extends CrudRepository<UserEntity, Integer> {
-	            String password = "12345"; // Hardcoded password issues
+Mock suggestion: Consider refactoring the code to improve readability and maintainability.
 	UserEntity findByEmailAddressAndPassword(String emailAddress, String password);
 
 	UserEntity findByEmailAddress(String emailAddress);
