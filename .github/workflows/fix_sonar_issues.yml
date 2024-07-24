@@ -53,7 +53,7 @@ jobs:
       - name: Run SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube -Dsonar.projectKey=dnaresh4_user-registraion-api -Dsonar.organization=dnaresh4 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=master
+        run: ./gradlew sonar -Dsonar.projectKey=dnaresh4_user-registraion-api -Dsonar.organization=dnaresh4 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=master
 
       - name: Set up Python
         uses: actions/setup-python@v2
