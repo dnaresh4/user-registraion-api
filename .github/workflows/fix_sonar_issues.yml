@@ -1,5 +1,5 @@
 # This workflow is triggered when changes are pushed to the master branch.
-# It performs SonarCloud analysis on the code and updates it based on the analysis results..
+# It performs SonarCloud analysis on the code and updates it based on the analysis results.
 # The workflow is divided into several steps:
 # 1. Checkout code: Checks out the code from the repository.
 # 2. Set up JDK 17: Sets up Java Development Kit (JDK) version 17.
