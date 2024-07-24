@@ -82,9 +82,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          #PR_EXISTS=$(gh pr list --state open --head "$(git rev-parse --abbrev-ref HEAD)" | grep -c "$(git rev-parse --abbrev-ref HEAD)")
+          PR_EXISTS=$(gh pr list --state open --head "$(git rev-parse --abbrev-ref HEAD)" | grep -c "$(git rev-parse --abbrev-ref HEAD)")
           echo "This workflow is running in repository: ${{ github.repository }}"
-          PR_EXISTS=$(gh pr list --state open --base release --head master --json number --jq '.[].number')
+          #PR_EXISTS=$(gh pr list --state open --base release --head master --json number --jq '.[].number')
 
           if [ "$PR_EXISTS" -eq 0 ]; then
             python3 .github/scripts/createPR.py
