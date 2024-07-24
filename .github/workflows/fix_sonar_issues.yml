@@ -53,7 +53,7 @@ jobs:
       - name: Run SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube -Dsonar.projectKey=AvinashNagella1999_user-registraion-api -Dsonar.organization=avinashnagella1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=master
+        run: ./gradlew sonarqube -Dsonar.projectKey=dnaresh4_user-registraion-api -Dsonar.organization=dnaresh4 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=master
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -66,20 +66,20 @@ jobs:
       - name: Generate and parse SonarCloud report
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: AvinashNagella1999_user-registraion-api
-          SONAR_ORGANIZATION: avinashnagella1999
+          SONAR_PROJECT_KEY: dnaresh4_user-registraion-api
+          SONAR_ORGANIZATION: dnaresh4
         run: python3 .github/scripts/fetchSonarIssues.py
 
       - name: Process issues and update code
         env:
           OPENAI_API_KEY: ${{ secrets.OPEN_AI_KEY_2 }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: python3 .github/scripts/processReportAndUpdateCode.py
 
       - name: Create Pull Request to release branch
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           PR_EXISTS=$(gh pr list --state open --head "$(git rev-parse --abbrev-ref HEAD)" | grep -c "$(git rev-parse --abbrev-ref HEAD)")

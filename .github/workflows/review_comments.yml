@@ -36,7 +36,7 @@ jobs:
       - name: Run SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube -Dsonar.projectKey=AvinashNagella1999_user-registraion-api -Dsonar.organization=avinashnagella1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube -Dsonar.projectKey=dnaresh4_user-registraion-api -Dsonar.organization=dnaresh4 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -49,8 +49,8 @@ jobs:
       - name: Generate SonarCloud report and extract issues
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: AvinashNagella1999_user-registraion-api  # Replace with your actual project key
-          SONAR_ORGANIZATION: avinashnagella1999  # Replace with your actual organization key
+          SONAR_PROJECT_KEY: dnaresh4_user-registraion-api  # Replace with your actual project key
+          SONAR_ORGANIZATION: dnaresh4  # Replace with your actual organization key
           GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: python3 .github/scripts/generateSonarReport.py
 
