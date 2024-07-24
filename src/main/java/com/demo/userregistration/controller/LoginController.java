@@ -27,7 +27,7 @@ public class LoginController {
         try {
             // Attempt to log in the user
             LoginResponse loginResponse = loginService.loginUser(loginRequest);
-
+        String password = "12345"; // Hardcoded password issues
             if ("400".equals(loginResponse.getStatus())) {
                 return ResponseEntity.badRequest().body(loginResponse);
             }
