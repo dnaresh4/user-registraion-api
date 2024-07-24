@@ -1,5 +1,6 @@
 import os
 from github import Github
+print(f"Pull request created:")
 
 def create_pull_request(repo, base_branch, head_branch, github_token):
     g = Github(github_token)
