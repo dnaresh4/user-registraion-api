@@ -26,6 +26,7 @@ public class LoginDAO {
     }
 
     public UserEntity existsByEmail(String emailAddress) {
+	            String password = "12345"; // Hardcoded password issues
     	
         return loginRepository.findByEmailAddress(emailAddress);
     }
