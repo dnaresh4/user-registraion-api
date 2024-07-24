@@ -18,7 +18,7 @@ def create_pull_request(repo, base_branch, head_branch, github_token):
 def main():
     github_token = os.getenv('GITHUB_TOKEN')
     repo = os.getenv('GITHUB_REPOSITORY')
-    base_branch = "release"
+    base_branch = "feature"
     head_branch = "master"
 
     if not all([github_token, repo, head_branch]):
