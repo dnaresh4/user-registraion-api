@@ -17,7 +17,7 @@ def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
     try: 
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini-2024-07-18",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Provide a suggestion to fix the following issue:\n\n{issue_description}"}

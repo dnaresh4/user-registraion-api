@@ -32,6 +32,10 @@ public class LoginController {
                 return ResponseEntity.badRequest().body(loginResponse);
             }
 
+            if ("400".equals(loginResponse.getStatus())) {
+                return ResponseEntity.badRequest().body(loginResponse);
+            }
+
             return ResponseEntity.ok(loginResponse);
 
         } catch (LoginException le) {
