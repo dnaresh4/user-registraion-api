@@ -41,7 +41,7 @@ test {
     }
 }
 
-sonarqube {
+sonar {
     properties {
         property "sonar.projectKey", "dnaresh4_user-registraion-api"
         property "sonar.organization", "dnaresh4"
