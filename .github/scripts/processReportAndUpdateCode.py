@@ -40,7 +40,7 @@ def run_git_command(command):
         print(result.stdout)
         if result.stderr:
             print(result.stderr)
-     except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError as e:
         print(f"Error running command {' '.join(command)}: {e.stderr}")
         raise
 
