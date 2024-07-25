@@ -8,7 +8,7 @@ def get_openai_suggestions(issue_description, api_key):
     openai.api_key = api_key
     try:
         response = openai.chat.completions.create(
-            model="gpt-4o-mini-2024-07-18",
+            model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Provide a suggestion to fix the following issue:\n\n{issue_description}"}
@@ -18,6 +18,10 @@ def get_openai_suggestions(issue_description, api_key):
             top_p=1
         )
         return response['choices'][0]['message']['content'].strip()
+    except openai.RateLimitError as e:
+        print(f"Rate limit exceeded: {e}")
+        # Mock response for testing purposes
+       # return "Mock suggestion: Consider refactoring the code to improve readability and maintainability."
 
 def update_code_with_suggestion(file_path, line, suggestion):
     with open(file_path, 'r') as file:
@@ -58,16 +62,16 @@ def main():
 
     for issue in issues:
         suggestion = get_openai_suggestions(issue['message'], openai_api_key)
-        file_path = issue['component'].replace('dnaresh4_user-registraion-api:', '')
+        file_path = issue['component'].replace('AvinashNagella1999_user-registraion-api:', '')
         line = issue.get('line', 1)
         update_code_with_suggestion(file_path, line, suggestion)
         updated_files.append(file_path)
         print(f"Updated {file_path} at line {line} with suggestion: {suggestion}")
-    
+
     if not updated_files:
         print("No files updated.")
         return
-    
+
     # Commit the changes
     commit_message = "Update code based on SonarCloud issues and OpenAI suggestions"
     head_branch = os.getenv('GITHUB_HEAD_REF')
