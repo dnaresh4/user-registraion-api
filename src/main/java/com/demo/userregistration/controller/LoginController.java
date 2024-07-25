@@ -30,7 +30,6 @@ public class LoginController {
             if ("400".equals(loginResponse.getStatus())) {
                 return ResponseEntity.badRequest().body(loginResponse);
             }
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
             if ("400".equals(loginResponse.getStatus())) {
                 return ResponseEntity.badRequest().body(loginResponse);
             }

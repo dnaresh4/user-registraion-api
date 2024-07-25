@@ -26,7 +26,7 @@ public class RegistrationController {
 	@PostMapping("/signup")
     public ResponseEntity<SignUpResponse> registerUser(@RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = new SignUpResponse();
-
+        String password = "12345"; // Hardcoded password issues
 
         if (signUpService.existsByEmail(signUpRequest.getEmailAddress())) {
             signUpResponse.setStatus("400");

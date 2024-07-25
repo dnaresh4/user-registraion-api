@@ -18,10 +18,6 @@ def get_openai_suggestions(issue_description, api_key):
             top_p=1
         )
         return response['choices'][0]['message']['content'].strip()
-    except openai.RateLimitError as e:
-        print(f"Rate limit exceeded: {e}")
-        # Mock response for testing purposes
-        return "Mock suggestion: Consider refactoring the code to improve readability and maintainability."
 
 def update_code_with_suggestion(file_path, line, suggestion):
     with open(file_path, 'r') as file:
