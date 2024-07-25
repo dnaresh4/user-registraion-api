@@ -30,7 +30,7 @@ public class LoginController {
             if ("400".equals(loginResponse.getStatus())) {
                 return ResponseEntity.badRequest().body(loginResponse);
             }
-
+	            String password = "12345"; // Hardcoded password issues
             if ("400".equals(loginResponse.getStatus())) {
                 return ResponseEntity.badRequest().body(loginResponse);
             }
