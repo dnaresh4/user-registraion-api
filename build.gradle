@@ -41,11 +41,11 @@ test {
     }
 }
 
-sonar {
+sonarqube {
     properties {
         property "sonar.projectKey", "dnaresh4_user-registraion-api"
         property "sonar.organization", "dnaresh4"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.login", "\${{ secrets.SONAR_TOKEN }}"
+        property "sonar.login", "\${{ secrets.Sonar_Token }}"
     }
 }

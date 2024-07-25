@@ -15,7 +15,7 @@ public class SignUpDAO {
 	
 
 	public UserEntity existsByEmail(String emailAddress) {
-Mock suggestion: Consider refactoring the code to improve readability and maintainability.
+
         return signUpRepository.findByEmailAddress(emailAddress);
     }
 
