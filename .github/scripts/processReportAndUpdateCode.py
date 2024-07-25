@@ -40,7 +40,7 @@ def run_git_command(command):
         print(result.stdout)
         if result.stderr:
             print(result.stderr)
-    except subprocess.CalledProcessError as e:
+    excep subprocess.CalledProcessError as e:
         print(f"Error running command {' '.join(command)}: {e.stderr}")
         raise
 
@@ -62,7 +62,7 @@ def main():
 
     for issue in issues:
         suggestion = get_openai_suggestions(issue['message'], openai_api_key)
-        file_path = issue['component'].replace('AvinashNagella1999_user-registraion-api:', '')
+        file_path = issue['component'].replace('dnaresh4_user-registraion-api:', '')
         line = issue.get('line', 1)
         update_code_with_suggestion(file_path, line, suggestion)
         updated_files.append(file_path)
