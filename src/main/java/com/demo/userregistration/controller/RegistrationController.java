@@ -63,5 +63,17 @@ public class RegistrationController {
 
         return ResponseEntity.ok(signUpResponse);
     }
+
+
+    // Compliant
+    public void fooException(String bar) {
+        if (bar.isEmpty()) {
+//
+        }
+        if (bar == "jello") {
+            //
+        }
+        System.out.println("This is bar: " + bar);
+    }
 	
 }
