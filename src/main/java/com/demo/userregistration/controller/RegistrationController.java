@@ -18,7 +18,7 @@ import com.demo.userregistration.vo.SignUpResponse;
 @RequestMapping("/v1")
 public class RegistrationController {
 
-	@Autowired
+    @Autowired
 	private SignUpService signUpService;
 
 
@@ -26,6 +26,7 @@ public class RegistrationController {
 	@PostMapping("/signup")
     public ResponseEntity<SignUpResponse> registerUser(@RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = new SignUpResponse();
+Mock suggestion: Consider refactoring the code to improve readability and maintainability.
 
         if (signUpService.existsByEmail(signUpRequest.getEmailAddress())) {
             signUpResponse.setStatus("400");
@@ -61,6 +62,18 @@ public class RegistrationController {
         }
 
         return ResponseEntity.ok(signUpResponse);
+    }
+
+
+    // Compliant
+    public void fooException(String bar) {
+        if (bar.isEmpty()) {
+//
+        }
+        if (bar == "jello") {
+            //
+        }
+        System.out.println("This is bar: " + bar);
     }
 	
 }

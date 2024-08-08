@@ -1,0 +1,64 @@
+# This workflow performs SonarQube analysis and code review on pull requests targeting the 'release' branch.
+
+name: SonarQube Analysis and Code Review
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - release
+
+jobs:
+  sonarqube-analysis:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: Grant execute permission for Gradle Wrapper (Unix)
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+
+      - name: Run SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube -Dsonar.projectKey=dnaresh4_user-registraion-api -Dsonar.organization=dnaresh4 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Generate SonarCloud report and extract issues
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: dnaresh4_user-registraion-api  # Replace with your actual project key
+          SONAR_ORGANIZATION: dnaresh4  # Replace with your actual organization key
+          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: python3 .github/scripts/generateSonarReport.py
+
+      - name: Get suggestions from OpenAI and add review comments
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPEN_AI_KEY_2 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: python3 .github/scripts/processSonarReport.py

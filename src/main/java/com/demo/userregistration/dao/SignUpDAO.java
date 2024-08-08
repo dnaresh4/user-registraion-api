@@ -10,11 +10,12 @@ import com.demo.userregistration.repository.SignUpRepository;
 @Component
 public class SignUpDAO {
 	
-	@Autowired
+    @Autowired
 	private SignUpRepository signUpRepository;
 	
 
 	public UserEntity existsByEmail(String emailAddress) {
+
         return signUpRepository.findByEmailAddress(emailAddress);
     }
 

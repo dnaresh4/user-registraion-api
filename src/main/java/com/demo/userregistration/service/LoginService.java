@@ -14,7 +14,7 @@ import com.demo.userregistration.vo.LoginResponse;
 @Service
 public class LoginService {
 	
-	@Autowired
+    @Autowired
 	private LoginDAO loginDao;
 
 	public LoginResponse loginUser(LoginRequest loginRequest) {

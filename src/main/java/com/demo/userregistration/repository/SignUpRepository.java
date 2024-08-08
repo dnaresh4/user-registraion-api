@@ -7,7 +7,7 @@ import com.demo.userregistration.model.UserEntity;
 
 @Repository
 public interface SignUpRepository extends CrudRepository<UserEntity, Integer> {
-	
+
 	UserEntity findByEmailAddress(String emailAddress);
 
 }

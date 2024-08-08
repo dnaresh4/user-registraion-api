@@ -1,0 +1,96 @@
+# This workflow is triggered when changes are pushed to the master branch.
+# It performs SonarCloud analysis on the code and updates it based on the analysis results.
+# The workflow is divided into several steps:
+# 1. Checkout code: Checks out the code from the repository.
+# 2. Set up JDK 17: Sets up Java Development Kit (JDK) version 17.
+# 3. Cache Gradle packages: Caches Gradle packages to improve build performance.
+# 4. Grant execute permission for Gradle Wrapper (Unix): Grants execute permission to the Gradle Wrapper script on Unix systems.
+# 5. Run SonarCloud analysis: Runs SonarCloud analysis using the Gradle wrapper and specified SonarCloud configuration.
+# 6. Set up Python: Sets up Python version 3.x.
+# 7. Install dependencies: Installs required Python dependencies.
+# 8. Generate and parse SonarCloud report: Generates and parses the SonarCloud report using a Python script.
+# 9. Process issues and update code: Processes the SonarCloud issues and updates the code using an OpenAI-powered Python script.
+# 10. Create Pull Request to release branch: Creates a pull request to the release branch using a Python script.
+
+
+name: SonarCloud Analysis and Code Update
+
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sonarqube-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for Gradle Wrapper (Unix)
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+
+      - name: Run SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: echo ${{ secrets.SONAR_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install requests openai PyGithub
+
+      - name: Generate and parse SonarCloud report
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: dnaresh4_user-registraion-api
+          SONAR_ORGANIZATION: dnaresh4
+        run: python3 .github/scripts/fetchSonarIssues.py
+
+      - name: Process issues and update code
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPEN_AI_KEY_2 }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 .github/scripts/processReportAndUpdateCode.py
+
+      - name: Create Pull Request to release branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          #PR_EXISTS=$(gh pr list --state open --head "$(git rev-parse --abbrev-ref HEAD)" | grep -c "$(git rev-parse --abbrev-ref HEAD)")
+          echo "This workflow is running in repository: ${{ github.repository }}"
+          #PR_EXISTS=$(gh pr list --state open --base master --head feature --json number --jq '.[].number')
+
+          #if [ "$PR_EXISTS" -eq 0 ]; then
+            python3 .github/scripts/createPR.py
+          #else
+            echo "Pull request already exists for the current branch."
+          #fi

@@ -18,7 +18,7 @@ import com.demo.userregistration.vo.LoginResponse;
 @RequestMapping("/v1")
 public class LoginController {
 
-	@Autowired
+  @Autowired
 	private LoginService loginService;
 
 	@PostMapping("/login")
@@ -27,7 +27,9 @@ public class LoginController {
         try {
             // Attempt to log in the user
             LoginResponse loginResponse = loginService.loginUser(loginRequest);
-
+            if ("400".equals(loginResponse.getStatus())) {
+                return ResponseEntity.badRequest().body(loginResponse);
+            }
             if ("400".equals(loginResponse.getStatus())) {
                 return ResponseEntity.badRequest().body(loginResponse);
             }

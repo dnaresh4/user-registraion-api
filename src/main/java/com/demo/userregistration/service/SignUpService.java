@@ -12,7 +12,7 @@ import com.demo.userregistration.vo.SignUpResponse;
 @Service
 public class SignUpService {
 	
-	@Autowired
+    @Autowired
 	private SignUpDAO signUpDao;
 
 	public boolean existsByEmail(String emailAddress) {
