@@ -3,6 +3,7 @@
 name: SonarQube Analysis and Code Review
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - release
